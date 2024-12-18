@@ -4,17 +4,27 @@ import type { BlogPost } from '~/types'
 
 const route = useRoute()
 
-const { data: post } = await useAsyncData(route.path, () => queryContent<BlogPost>(route.path).findOne())
+const { data: post } = await useAsyncData(route.path, () =>
+  queryContent<BlogPost>(route.path).findOne()
+)
 if (!post.value) {
-  throw createError({ statusCode: 404, statusMessage: 'Post not found', fatal: true })
+  throw createError({
+    statusCode: 404,
+    statusMessage: 'Post not found',
+    fatal: true
+  })
 }
 
-const { data: surround } = await useAsyncData(`${route.path}-surround`, () => queryContent('/blog')
-  .where({ _extension: 'md' })
-  .without(['body', 'excerpt'])
-  .sort({ date: -1 })
-  .findSurround(withoutTrailingSlash(route.path))
-, { default: () => [] })
+const { data: surround } = await useAsyncData(
+  `${route.path}-surround`,
+  () =>
+    queryContent('/blog')
+      .where({ _extension: 'md' })
+      .without(['body', 'excerpt'])
+      .sort({ date: -1 })
+      .findSurround(withoutTrailingSlash(route.path)),
+  { default: () => [] }
+)
 
 const title = post.value.head?.title || post.value.title
 const description = post.value.head?.description || post.value.description
@@ -39,7 +49,52 @@ if (post.value.image?.src) {
 
 <template>
   <UContainer v-if="post">
+    <UButton
+      icon="material-symbols:keyboard-backspace-rounded"
+      size="sm"
+      color="gray"
+      variant="soft"
+      label="Back to news"
+      :trailing="false"
+      class="mt-6"
+      to="/"
+    />
+    <ULandingHero
+      v-if="post.hero"
+      :ui="{
+        wrapper:
+          'py-6  sm:py-6 md:py-6 border-b border-gray-200 dark:border-gray-700',
+        container: 'sm:px-0 lg:pb-10 px-0 lg:px-0 lg:grid-cols-5 lg:items-start',
+        base: 'lg:col-span-3'
+      }"
+      :title="post.title"
+      :description="post.description"
+      :orientation="post.hero.orientation"
+      :links="post.hero.links"
+    >
+      <template #headline>
+        <UBadge
+          v-bind="post.badge"
+          variant="subtle"
+        />
+        <span class="text-gray-500 dark:text-gray-400">&middot;</span>
+        <time class="text-gray-500 dark:text-gray-400">{{
+          new Date(post.date).toLocaleDateString("en", {
+            year: "numeric",
+            month: "short",
+            day: "numeric"
+          })
+        }}</time>
+      </template>
+      <template #default>
+        <img
+          v-bind="post.image"
+          class="lg:col-span-2 px-6"
+        >
+      </template>
+    </ULandingHero>
     <UPageHeader
+      v-else
       :title="post.title"
       :description="post.description"
     >
@@ -49,7 +104,13 @@ if (post.value.image?.src) {
           variant="subtle"
         />
         <span class="text-gray-500 dark:text-gray-400">&middot;</span>
-        <time class="text-gray-500 dark:text-gray-400">{{ new Date(post.date).toLocaleDateString('en', { year: 'numeric', month: 'short', day: 'numeric' }) }}</time>
+        <time class="text-gray-500 dark:text-gray-400">{{
+          new Date(post.date).toLocaleDateString("en", {
+            year: "numeric",
+            month: "short",
+            day: "numeric"
+          })
+        }}</time>
       </template>
 
       <div class="flex flex-wrap items-center gap-3 mt-4">
