@@ -1,38 +1,83 @@
 <script setup lang="ts">
-const links = [{
-  label: 'Resources',
-  children: [{
-    label: 'Help center'
-  }, {
-    label: 'Docs'
-  }, {
-    label: 'Roadmap'
-  }, {
-    label: 'Changelog'
-  }]
-}, {
-  label: 'Features',
-  children: [{
-    label: 'Affiliates'
-  }, {
-    label: 'Portal'
-  }, {
-    label: 'Jobs'
-  }, {
-    label: 'Sponsors'
-  }]
-}, {
-  label: 'Company',
-  children: [{
-    label: 'About'
-  }, {
-    label: 'Pricing'
-  }, {
-    label: 'Careers'
-  }, {
-    label: 'Blog'
-  }]
-}]
+const { footer } = useAppConfig()
+
+const links = [
+  {
+    label: 'Resources',
+    children: [
+      {
+        label: 'Voice Library',
+        to: 'https://ttsopenai.com/voice-library',
+        external: true,
+        target: '_blank'
+      },
+      {
+        label: 'Service Integrations (API)',
+        to: 'https://docs.ttsopenai.com/',
+        external: true,
+        target: '_blank'
+      }
+    ]
+  },
+  {
+    label: 'Features',
+    children: [
+      {
+        label: 'Text To Speech',
+        to: 'https://ttsopenai.com/',
+        external: true,
+        target: '_blank'
+      },
+      {
+        label: 'Document To Speech',
+        to: 'https://ttsopenai.com/documents',
+        external: true,
+        target: '_blank'
+      },
+      {
+        label: 'Story To Speech',
+        to: 'https://ttsopenai.com/story-maker',
+        external: true,
+        target: '_blank'
+      },
+      {
+        label: 'Voice Cloning',
+        to: 'https://ttsopenai.com/my-voice',
+        external: true,
+        target: '_blank'
+      }
+    ]
+  },
+  {
+    label: 'TTsOpenAI Team',
+    children: [
+      {
+        label: 'Privacy Policy',
+        to: 'https://ttsopenai.com/privacy',
+        external: true,
+        target: '_blank'
+      },
+      {
+        label: 'Terms of Service',
+        to: 'https://ttsopenai.com/terms',
+        external: true,
+        target: '_blank'
+      },
+      {
+        label: 'Pricing Plans',
+        to: 'https://ttsopenai.com/pricing-plans',
+        external: true,
+        target: '_blank'
+      },
+      {
+        label: 'Frequency Asked Questions',
+        to: 'https://ttsopenai.com/pricing-plans#faq',
+        external: true,
+        target: '_blank'
+      }
+    ]
+  }
+]
 
 const toast = useToast()
 
@@ -56,57 +101,28 @@ function onSubmit() {
 <template>
   <UFooter>
     <template #top>
-      <UFooterColumns :links="links">
-        <template #right>
-          <form @submit.prevent="onSubmit">
-            <UFormGroup
-              label="Subscribe to our newsletter"
-              :ui="{ container: 'mt-3' }"
-            >
-              <UInput
-                v-model="email"
-                type="email"
-                placeholder="Enter your email"
-                :ui="{ icon: { trailing: { pointer: '' } } }"
-                required
-                size="xl"
-                autocomplete="off"
-                class="max-w-sm"
-                input-class="rounded-full"
-              >
-                <template #trailing>
-                  <UButton
-                    type="submit"
-                    size="xs"
-                    color="primary"
-                    :label="loading ? 'Subscribing' : 'Subscribe'"
-                    :loading="loading"
-                  />
-                </template>
-              </UInput>
-            </UFormGroup>
-          </form>
-        </template>
-      </UFooterColumns>
+      <UFooterColumns :links="links" />
     </template>
 
     <template #left>
-      <p class="text-gray-500 dark:text-gray-400 text-sm">
-        Copyright © {{ new Date().getFullYear() }}. All rights reserved.
-      </p>
+      {{ footer.credits }}
     </template>
-
+    <template #center>
+      <div class="text-xs text-gray-500 text-center">
+        The website is jointly operated by A2ZAI LTD No:16078579 Registered
+        address at 483 Green Lanes, London, England, N13 4BS
+      </div>
+    </template>
     <template #right>
       <UColorModeButton size="sm" />
 
-      <UButton
-        to="https://github.com/nuxt-ui-pro/saas"
-        target="_blank"
-        icon="i-simple-icons-github"
-        aria-label="GitHub"
-        color="gray"
-        variant="ghost"
-      />
+      <template v-if="footer?.links">
+        <UButton
+          v-for="(link, index) of footer?.links"
+          :key="index"
+          v-bind="{ color: 'gray', variant: 'ghost', ...link }"
+        />
+      </template>
     </template>
   </UFooter>
 </template>

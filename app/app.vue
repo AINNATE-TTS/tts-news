@@ -1,6 +1,6 @@
 <script setup lang="ts">
 const colorMode = useColorMode()
-
+const { seo } = useAppConfig()
 const color = computed(() => colorMode.value === 'dark' ? '#111827' : 'white')
 
 useHead({
@@ -18,9 +18,10 @@ useHead({
 })
 
 useSeoMeta({
-  titleTemplate: '%s - Nuxt UI Pro - SaaS template',
-  ogImage: 'https://saas-template.nuxt.dev/social-card.png',
-  twitterImage: 'https://saas-template.nuxt.dev/social-card.png',
+  titleTemplate: `%s - ${seo?.siteName}`,
+  ogSiteName: seo?.siteName,
+  ogImage: 'https://news.ttsopenai.com/social-card.png',
+  twitterImage: 'https://news.ttsopenai.com/social-card.png',
   twitterCard: 'summary_large_image'
 })
 </script>
