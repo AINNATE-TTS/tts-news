@@ -1,0 +1,1 @@
+import{d as n,aA as o}from"./DdII4wio.js";const e=n({name:"DocumentDrivenNotFound",render(){return o("div","Document not found")}}),m=Object.assign(e,{__name:"DocumentDrivenNotFound"});export{m as default};
