@@ -36,7 +36,7 @@ defineOgImageComponent('Saas')
       :description="page.description"
     >
       <div
-        class="absolute inset-0 landing-grid z-[-1] [mask-image:radial-gradient(100%_100%_at_top_right,white,transparent)]"
+        class="absolute -top-14 inset-0 landing-grid z-[-1] [mask-image:radial-gradient(100%_100%_at_top_right,white,transparent)]"
       >
         <BaseBackgroundColor />
       </div>

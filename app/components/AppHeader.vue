@@ -28,10 +28,22 @@ onMounted(() => {
     }, 3000)
   }
 })
+
+// check if scroll is at top of the page or from top 90px
+const isScrolled = ref(false)
+const scrollHandler = () => {
+  isScrolled.value = window.scrollY > 90
+}
+onMounted(() => {
+  window.addEventListener('scroll', scrollHandler)
+})
 </script>
 
 <template>
   <UHeader
+    :ui="{
+      wrapper: isScrolled ? 'bg-background/75' : 'bg-background/0 backdrop-blur-sm border-b-0'
+    }"
     :links="links"
     @mouseenter="staticLogo = false"
     @mouseleave="staticLogo = true"
